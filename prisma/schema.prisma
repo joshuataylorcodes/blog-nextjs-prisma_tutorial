@@ -1,8 +1,9 @@
 // schema.prisma
 
+// schema.prisma
+
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["jsonProtocol"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -49,17 +50,6 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  posts         Post[]
-  accounts      Account[]
-  sessions      Session[]
-}
-
 model VerificationToken {
   id         Int      @id @default(autoincrement())
   identifier String
@@ -67,4 +57,17 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model User {
+  id        String    @id @default(cuid())
+  name      String?
+  email     String?   @unique
+  createdAt DateTime  @default(now()) @map(name: "created_at")
+  updatedAt DateTime  @updatedAt @map(name: "updated_at")
+  posts     Post[]
+  Account   Account[]
+  Session   Session[]
+
+  @@map(name: "users")
 }
